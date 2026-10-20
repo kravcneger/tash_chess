@@ -52,7 +52,9 @@ RSpec.describe "Locales" do
         tournament_standings_path(swiss),
         tournament_path(finished), tournament_round_path(finished, 1), tournament_standings_path(finished),
         tournament_path(round_robin), edit_tournament_path(round_robin), tournament_round_path(round_robin, 6),
-        tournament_standings_path(round_robin)
+        tournament_standings_path(round_robin),
+        tournament_screen_path(registration), tournament_screen_path(swiss), tournament_screen_path(swiss, view: "standings"),
+        tournament_screen_path(finished), tournament_screen_path(finished, view: "pairings"), tournament_screen_path(round_robin)
       ]
     end
 

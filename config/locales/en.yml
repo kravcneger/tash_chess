@@ -108,6 +108,8 @@ en:
       pairings: Pairings
       pairings_later: Pairings appear when the tournament starts
       standings: Standings
+      screen: Hall screen
+      screen_hint: Pairings and standings in large type, for the TV in the playing hall
     show:
       round_on: "Round %{number} is on."
       see_pairings: See who plays whom →
@@ -215,6 +217,42 @@ en:
         tiebreaks_swiss: Ties are broken by Buchholz, then Sonneborn-Berger, then wins.
         tiebreaks_round_robin: Ties are broken by Sonneborn-Berger, then wins.
         legend_html: "In round cells: %{white} / %{black} color played, “+” bye, “–” rested, “…” in play."
+
+    screens:
+      show:
+        views:
+          pairings: Pairings
+          standings: Standings
+          members: Players
+        views_short:
+          pairings: Pairings
+          standings: Standings
+        round: Round
+        of: "of %{total}"
+        progress: "Results in: %{played} of %{total}"
+        tiebreaks_swiss: "Bh: Buchholz, the opponents' total score"
+        tiebreaks_round_robin: "SB: Sonneborn-Berger"
+        live: Updates live
+        controls: Screen controls
+        rotate_hint: Switch between pairings and standings automatically
+        rotate_off: "Off"
+        seconds:
+          one: "%{count}s"
+          other: "%{count}s"
+        theme: Light or dark theme
+        fullscreen: Full screen
+        exit: Leave the screen
+      pairings:
+        bye: "bye · +%{points}"
+        rests: rests
+        versus: vs
+      standings:
+        player: Player
+        buchholz: Bh
+        sonneborn_berger: SB
+        points: Pts
+      members:
+        empty: No players yet.
 
   games:
     update:

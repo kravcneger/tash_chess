@@ -2,14 +2,16 @@
 
 <div class="page-head">
   <div>
-    <p class="crumbs"><%= link_to t("layouts.application.players"), players_path %></p>
+    <p class="crumbs"><%= link_to with_icon(:arrow_left, t("layouts.application.players")), players_path %></p>
     <h1><%= @player.name %></h1>
     <p class="muted"><span class="nick">@<%= @player.nickname %></span> · FIDE <%= rating(@player) %></p>
   </div>
   <div class="toolbar">
-    <%= link_to t("shared.edit"), edit_player_path(@player), class: "btn" %>
-    <%= button_to t("shared.delete"), @player, method: :delete, class: "btn btn--danger",
-          form: { data: { turbo_confirm: t(".confirm_delete", name: @player.name) } } %>
+    <%= link_to with_icon(:pencil, t("shared.edit")), edit_player_path(@player), class: "btn" %>
+    <%= button_to @player, method: :delete, class: "btn btn--danger",
+          form: { data: { turbo_confirm: t(".confirm_delete", name: @player.name) } } do %>
+      <%= with_icon(:trash, t("shared.delete")) %>
+    <% end %>
   </div>
 </div>
 

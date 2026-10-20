@@ -14,10 +14,10 @@
     <%= yield :head %>
 
     <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= render "layouts/fonts" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
@@ -25,13 +25,13 @@
     <header class="topbar">
       <div class="container topbar__inner">
         <%= link_to root_path, class: "brand" do %>
-          <span class="brand__mark" aria-hidden="true">♞</span> Tash Chess
+          <%= image_tag "logo.png", class: "brand__mark", alt: "", width: 32, height: 32 %> <span class="brand__name">Tash Chess</span>
         <% end %>
+        <nav class="nav">
+          <%= nav_link_to with_icon(:trophy, t(".tournaments")), tournaments_path, active: controller_path.start_with?("tournaments") || controller_name == "games" %>
+          <%= nav_link_to with_icon(:users, t(".players")), players_path, active: controller_name == "players" %>
+        </nav>
         <div class="topbar__end">
-          <nav class="nav">
-            <%= nav_link_to t(".tournaments"), tournaments_path, active: controller_path.start_with?("tournaments") || controller_name == "games" %>
-            <%= nav_link_to t(".players"), players_path, active: controller_name == "players" %>
-          </nav>
           <div class="locale-switch" role="group" aria-label="<%= t(".language") %>">
             <% I18n.available_locales.each do |locale| %>
               <%= button_to locale.to_s.upcase, locale_path, method: :patch, params: { locale: },

@@ -18,6 +18,27 @@ module TournamentsHelper
     end
   end
 
+  # How the game went for one side: :won, :lost or :drawn (nil while it's played, and for a bye).
+  def game_outcome(game, color)
+    if game.draw?
+      :drawn
+    elsif game.white_won? || game.black_won?
+      game.white_won? == (color == :white) ? :won : :lost
+    end
+  end
+
+  # "side--won", "side--lost" or "side--drawn", to color a player's side of a game.
+  def outcome_class(game, color, prefix: "side")
+    outcome = game_outcome(game, color)
+    "#{prefix}--#{outcome}" if outcome
+  end
+
+  # Gold, silver and bronze for the top three once somebody has scored.
+  def podium_class(row)
+    medal = { 1 => "gold", 2 => "silver", 3 => "bronze" }[row.rank]
+    "standing--podium standing--#{medal}" if medal && row.points.positive?
+  end
+
   def withdrawn_badge
     tag.span t("tournaments.withdrawn"), class: "badge badge--withdrawn"
   end

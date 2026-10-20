@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <title><%= [ content_for(:title), "Tash Chess" ].compact.join(" · ") %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex">
+    <%= csrf_meta_tags %>
+    <%= turbo_refresh_method_tag :morph %>
+    <%= turbo_refresh_scroll_tag :preserve %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+
+    <%= render "layouts/fonts" %>
+    <%= stylesheet_link_tag "screen", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <%# Old TV browsers may not run the JavaScript modules, and with them the live updates: reload now and then instead. %>
+    <script>setTimeout(function () { if (!window.Stimulus) window.location.reload() }, 60000)</script>
+  </head>
+
+  <body class="tv tv--<%= @theme %>" data-controller="screen"
+        data-screen-rotate-value="<%= @rotate.to_i %>" data-screen-next-url-value="<%= screen_path_with(view: (Tournaments::ScreensController::VIEWS - [ @view ]).first) %>"
+        data-action="mousemove@window->screen#wake touchstart@window->screen#wake keydown@window->screen#wake">
+    <%= yield %>
+  </body>
+</html>

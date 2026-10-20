@@ -1,0 +1,73 @@
+<% label = @tournament.registration? ? "members" : @view %>
+<% content_for :title, "#{t(".views.#{label}")} · #{@tournament.name}" %>
+<%= turbo_stream_from @tournament %>
+
+<header class="tv-head">
+  <div class="tv-head__title">
+    <%= image_tag "logo.png", class: "tv-brand", alt: "" %>
+    <div class="tv-head__text">
+      <h1 class="tv-title"><%= @tournament.name %></h1>
+      <p class="tv-subtitle"><%= [ @tournament.pairing_system_label, (l(@tournament.starts_on, format: :long) if @tournament.starts_on), @tournament.location ].compact.join(" · ") %></p>
+    </div>
+  </div>
+
+  <div class="tv-head__status">
+    <span class="tv-view"><%= t(".views.#{label}") %></span>
+    <% if @round %>
+      <div class="tv-round">
+        <span class="tv-round__label"><%= t(".round") %></span>
+        <span class="tv-round__number"><%= @round.number %></span>
+        <span class="tv-round__total"><%= t(".of", total: @tournament.rounds_count) %></span>
+      </div>
+    <% end %>
+    <span class="tv-clock" id="tv-clock" data-turbo-permanent data-screen-target="clock"></span>
+  </div>
+</header>
+
+<main class="tv-body">
+  <% if @tournament.registration? %>
+    <%= render "tournaments/screens/members", tournament: @tournament %>
+  <% elsif @view == "standings" %>
+    <%= render "tournaments/screens/standings", tournament: @tournament, standings: @standings %>
+  <% else %>
+    <%= render "tournaments/screens/pairings", tournament: @tournament, round: @round, standings: @standings %>
+  <% end %>
+</main>
+
+<footer class="tv-foot">
+  <div class="tv-foot__start">
+    <% if @round && @view == "pairings" && !@tournament.registration? %>
+      <% games = @round.games.reject(&:bye?) %>
+      <% played = games.count(&:played?) %>
+      <span><%= t(".progress", played:, total: games.size) %></span>
+      <span class="tv-progress"><span style="width: <%= games.empty? ? 100 : played * 100 / games.size %>%"></span></span>
+    <% elsif @view == "standings" && !@tournament.registration? %>
+      <span><%= t(@tournament.swiss? ? ".tiebreaks_swiss" : ".tiebreaks_round_robin") %></span>
+    <% end %>
+  </div>
+  <% unless @tournament.finished? %>
+    <span class="tv-live"><span class="tv-live__dot"></span> <%= t(".live") %></span>
+  <% end %>
+</footer>
+
+<nav class="tv-controls" aria-label="<%= t(".controls") %>">
+  <div class="tv-segmented">
+    <% Tournaments::ScreensController::VIEWS.each do |view| %>
+      <%= link_to screen_path_with(view:), class: class_names("tv-segmented__item", "is-active": view == @view) do %>
+        <span class="tv-label--long"><%= t(".views.#{view}") %></span><span class="tv-label--short"><%= t(".views_short.#{view}") %></span>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="tv-segmented tv-controls__rotate" title="<%= t(".rotate_hint") %>">
+    <span class="tv-segmented__label"><%= icon(:rotate) %></span>
+    <%= link_to t(".rotate_off"), screen_path_with(rotate: nil), class: class_names("tv-segmented__item", "is-active": @rotate.nil?) %>
+    <% Tournaments::ScreensController::ROTATE_INTERVALS.each do |seconds| %>
+      <%= link_to t(".seconds", count: seconds), screen_path_with(rotate: seconds), class: class_names("tv-segmented__item", "is-active": @rotate == seconds) %>
+    <% end %>
+  </div>
+  <%= link_to icon(@theme == "dark" ? :sun : :moon), screen_path_with(theme: (@theme == "dark" ? "light" : nil)),
+        class: "tv-button", title: t(".theme"), aria: { label: t(".theme") } %>
+  <button type="button" class="tv-button tv-button--fullscreen" data-action="screen#fullscreen" title="<%= t(".fullscreen") %>" aria-label="<%= t(".fullscreen") %>"><%= icon(:maximize) %></button>
+  <%= link_to icon(:x), @round && !@tournament.registration? ? tournament_round_path(@tournament, @round) : @tournament,
+        class: "tv-button", title: t(".exit"), aria: { label: t(".exit") } %>
+</nav>

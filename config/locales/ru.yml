@@ -114,6 +114,8 @@ ru:
       pairings: Жеребьёвка
       pairings_later: Жеребьёвка появится после старта турнира
       standings: Таблица
+      screen: Экран для зала
+      screen_hint: Жеребьёвка и таблица крупным шрифтом — для телевизора в зале
     show:
       round_on: "Идёт %{number}-й тур."
       see_pairings: Кто с кем играет →
@@ -227,6 +229,44 @@ ru:
         tiebreaks_swiss: При равенстве очков места определяются по Бухгольцу, затем по коэффициенту Бергера, затем по числу побед.
         tiebreaks_round_robin: При равенстве очков места определяются по коэффициенту Бергера, затем по числу побед.
         legend_html: "В клетках туров: %{white} / %{black} цвет фигур, «+» свободный тур, «–» отдых, «…» партия идёт."
+
+    screens:
+      show:
+        views:
+          pairings: Кто с кем играет
+          standings: Таблица
+          members: Участники
+        views_short:
+          pairings: Жеребьёвка
+          standings: Таблица
+        round: Тур
+        of: "из %{total}"
+        progress: "Результатов: %{played} из %{total}"
+        tiebreaks_swiss: "Бх — Бухгольц, сумма очков соперников"
+        tiebreaks_round_robin: "Берг. — коэффициент Бергера"
+        live: Обновляется автоматически
+        controls: Управление экраном
+        rotate_hint: Переключать жеребьёвку и таблицу автоматически
+        rotate_off: Выкл
+        seconds:
+          one: "%{count} с"
+          few: "%{count} с"
+          many: "%{count} с"
+          other: "%{count} с"
+        theme: Светлая или тёмная тема
+        fullscreen: Во весь экран
+        exit: Выйти из режима экрана
+      pairings:
+        bye: "свободен · +%{points}"
+        rests: отдыхает
+        versus: vs
+      standings:
+        player: Игрок
+        buchholz: Бх
+        sonneborn_berger: Берг.
+        points: Очки
+      members:
+        empty: Участников пока нет.
 
   games:
     update:

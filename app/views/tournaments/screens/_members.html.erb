@@ -1,0 +1,16 @@
+<% players = tournament.players.by_rating.to_a %>
+<% layout = screen_layout(players.size, item_height: 3.1, item_width: 18) %>
+
+<% if players.any? %>
+  <ol class="tv-members" style="<%= layout.style %>">
+    <% players.each.with_index(1) do |player, number| %>
+      <li class="tv-member">
+        <span class="tv-member__number"><%= number %></span>
+        <span class="tv-name"><%= player.name %></span>
+        <span class="tv-points"><%= player.fide_rating %></span>
+      </li>
+    <% end %>
+  </ol>
+<% else %>
+  <p class="tv-empty"><%= t(".empty") %></p>
+<% end %>

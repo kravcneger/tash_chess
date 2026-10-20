@@ -3,8 +3,8 @@
 
 <% if @tournament.in_progress? && (round = @tournament.current_round) %>
   <div class="callout">
-    <span><%= t(".round_on", number: round.number) %></span>
-    <%= link_to t(".see_pairings"), tournament_round_path(@tournament, round), class: "strong-link" %>
+    <span class="callout__text"><span class="live__dot"></span> <%= t(".round_on", number: round.number) %></span>
+    <%= link_to with_icon(:swords, t(".see_pairings")), tournament_round_path(@tournament, round), class: "btn btn--small" %>
   </div>
 <% end %>
 
@@ -69,8 +69,11 @@
       <% end %>
 
       <% if @available_players.any? %>
-        <input type="search" class="picker__filter" placeholder="<%= t(".filter_placeholder") %>" autocomplete="off"
-               aria-label="<%= t(".filter_label") %>" data-action="input->filter#apply">
+        <div class="picker__search">
+          <%= icon(:search) %>
+          <input type="search" class="picker__filter" placeholder="<%= t(".filter_placeholder") %>" autocomplete="off"
+                 aria-label="<%= t(".filter_label") %>" data-action="input->filter#apply">
+        </div>
 
         <%= form_with url: tournament_participations_path(@tournament), class: "picker" do |form| %>
           <ul class="picker__list">

@@ -5,7 +5,7 @@
     <h1><%= t(".title") %></h1>
     <p class="muted"><%= t(".subtitle") %></p>
   </div>
-  <%= link_to t(".new"), new_tournament_path, class: "btn btn--primary" %>
+  <%= link_to with_icon(:plus, t(".new")), new_tournament_path, class: "btn btn--primary" %>
 </div>
 
 <% if @tournaments.any? %>
@@ -17,13 +17,13 @@
           <%= status_badge(tournament) %>
         </div>
         <p class="muted"><%= tournament_summary(tournament) %></p>
-        <p class="tile__meta"><%= t(".members", count: tournament.participations.size) %></p>
+        <p class="tile__meta"><%= icon(:users) %> <%= t(".members", count: tournament.participations.size) %></p>
       </article>
     <% end %>
   </div>
 <% else %>
   <div class="empty">
     <p><%= t(".empty") %></p>
-    <%= link_to t(".create_first"), new_tournament_path, class: "btn btn--primary" %>
+    <%= link_to with_icon(:plus, t(".create_first")), new_tournament_path, class: "btn btn--primary" %>
   </div>
 <% end %>

@@ -1,0 +1,32 @@
+<% rows = standings.rows %>
+<% rounds = standings.rounds_count %>
+<%# Round-by-round results fit only in a single column. %>
+<% layout = screen_layout(rows.size, item_height: 2.8, header_rows: 0.5) { |columns| columns == 1 && rounds.between?(1, 15) ? 22 + rounds * 2.3 : 22 } %>
+<% show_rounds = layout.columns == 1 && rounds.between?(1, 15) %>
+
+<div class="<%= class_names("tv-standings", "tv-standings--rounds": show_rounds) %>" style="<%= layout.style %> --rounds: <%= [ rounds, 1 ].max %>;">
+  <% rows.each_slice(layout.rows) do |slice| %>
+    <div class="tv-standings__column">
+      <div class="tv-standing tv-standing--head">
+        <span class="tv-rank">#</span>
+        <span class="tv-name"><%= t(".player") %></span>
+        <% if show_rounds %>
+          <% 1.upto(standings.rounds_count) do |number| %><span class="tv-cell"><%= number %></span><% end %>
+        <% end %>
+        <span class="tv-tiebreak"><%= t(tournament.swiss? ? ".buchholz" : ".sonneborn_berger") %></span>
+        <span class="tv-score"><%= t(".points") %></span>
+      </div>
+      <% slice.each do |row| %>
+        <div class="<%= class_names("tv-standing", podium_class(row), "tv-standing--withdrawn": standings.withdrawn?(row.player)) %>">
+          <span class="tv-rank"><span><%= row.rank %></span></span>
+          <span class="tv-name"><%= row.player.name %></span>
+          <% if show_rounds %>
+            <% row.cells.each do |cell| %><%= screen_standings_cell(cell) %><% end %>
+          <% end %>
+          <span class="tv-tiebreak"><%= format_tiebreak(tournament.swiss? ? row.buchholz : row.sonneborn_berger) %></span>
+          <span class="tv-score"><%= format_score(row.points) %></span>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,23 @@
+<% games = round.games.includes(:white_player, :black_player).to_a %>
+<% layout = screen_layout(games.size, item_height: 4.5, item_width: 17) %>
+
+<ol class="tv-pairings" style="<%= layout.style %>">
+  <% games.each do |game| %>
+    <li id="<%= dom_id(game, :screen) %>" class="<%= class_names("tv-game", "tv-game--pending": game.pending?, "tv-game--done": game.played?, "tv-game--bye": game.bye?) %>">
+      <span class="tv-board" title="<%= t("tournaments.rounds.show.board") %>"><%= game.bye? ? "—" : game.board %></span>
+
+      <% [ [ game.white_player, :white ], [ game.black_player, :black ] ].each do |player, color| %>
+        <% if player %>
+          <span class="<%= class_names("tv-side", "tv-side--#{color}", outcome_class(game, color, prefix: "tv-side")) %>">
+            <span class="tv-piece tv-piece--<%= color %>" title="<%= t("colors.#{color}") %>"></span>
+            <span class="tv-name"><%= player.name %></span>
+            <span class="tv-points" title="<%= t("tournaments.rounds.player.points_before") %>"><%= format_score(standings[player]&.points_before(round.number)) %></span>
+            <span class="tv-result"><%= screen_score(game, color) %></span>
+          </span>
+        <% else %>
+          <span class="tv-side tv-side--bye"><%= tournament.bye_points.positive? ? t(".bye", points: tournament.bye_points) : t(".rests") %></span>
+        <% end %>
+      <% end %>
+    </li>
+  <% end %>
+</ol>

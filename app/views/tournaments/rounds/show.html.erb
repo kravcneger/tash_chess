@@ -45,7 +45,7 @@
             <td class="side side--black muted">—</td>
           <% else %>
             <td class="board-col"><span class="board-no" title="<%= t(".board_number", number: game.board) %>"><%= game.board %></span></td>
-            <td class="side side--white"><%= render "tournaments/rounds/player", player: game.white_player, color: :white, points: @standings[game.white_player]&.points_before(@round.number) %></td>
+            <td class="<%= class_names("side side--white", outcome_class(game, :white)) %>"><%= render "tournaments/rounds/player", player: game.white_player, color: :white, points: @standings[game.white_player]&.points_before(@round.number) %></td>
             <td class="result-col">
               <% if @tournament.in_progress? %>
                 <div class="result-picker" role="group" aria-label="<%= t(".result_of_board", number: game.board) %>">
@@ -64,7 +64,7 @@
                 <span class="result-final"><%= game.result_label.presence || "–" %></span>
               <% end %>
             </td>
-            <td class="side side--black"><%= render "tournaments/rounds/player", player: game.black_player, color: :black, points: @standings[game.black_player]&.points_before(@round.number) %></td>
+            <td class="<%= class_names("side side--black", outcome_class(game, :black)) %>"><%= render "tournaments/rounds/player", player: game.black_player, color: :black, points: @standings[game.black_player]&.points_before(@round.number) %></td>
           <% end %>
         </tr>
       <% end %>
@@ -74,16 +74,21 @@
 
 <div class="round-actions">
   <% if @round == @tournament.current_round && @tournament.can_pair_next_round? %>
-    <%= button_to t(".pair_next", number: @round.number + 1), tournament_rounds_path(@tournament), class: "btn btn--primary" %>
+    <%= button_to tournament_rounds_path(@tournament), class: "btn btn--primary btn--large" do %>
+      <%= with_icon(:shuffle, t(".pair_next", number: @round.number + 1)) %>
+    <% end %>
   <% elsif @round == @tournament.current_round && @tournament.can_finish? %>
-    <%= button_to t("tournaments.header.finish"), finish_tournament_path(@tournament), class: "btn btn--primary",
-          form: { data: { turbo_confirm: t("tournaments.header.confirm_finish") } } %>
+    <%= button_to finish_tournament_path(@tournament), class: "btn btn--primary btn--large",
+          form: { data: { turbo_confirm: t("tournaments.header.confirm_finish") } } do %>
+      <%= with_icon(:flag, t("tournaments.header.finish")) %>
+    <% end %>
   <% end %>
-  <%= link_to t("tournaments.header.standings"), tournament_standings_path(@tournament), class: "btn" %>
-  <button type="button" class="btn btn--ghost" data-controller="print" data-action="print#print"><%= t(".print") %></button>
+  <%= link_to with_icon(:list, t("tournaments.header.standings")), tournament_standings_path(@tournament), class: "btn" %>
+  <button type="button" class="btn btn--ghost" data-controller="print" data-action="print#print"><%= with_icon(:printer, t(".print")) %></button>
   <% if @tournament.swiss? && @tournament.in_progress? && @round == @tournament.current_round %>
-    <%= button_to t(".delete_round", number: @round.number), tournament_round_path(@tournament, @round), method: :delete,
-          class: "btn btn--ghost btn--danger-text",
-          form: { data: { turbo_confirm: t(".confirm_delete_round", number: @round.number) } } %>
+    <%= button_to tournament_round_path(@tournament, @round), method: :delete, class: "btn btn--ghost btn--danger-text",
+          form: { data: { turbo_confirm: t(".confirm_delete_round", number: @round.number) } } do %>
+      <%= with_icon(:trash, t(".delete_round", number: @round.number)) %>
+    <% end %>
   <% end %>
 </div>

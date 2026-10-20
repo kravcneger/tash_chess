@@ -3,54 +3,71 @@
 <header class="tournament-head">
   <div class="page-head">
     <div>
-      <p class="crumbs"><%= link_to t("layouts.application.tournaments"), tournaments_path %></p>
+      <p class="crumbs"><%= link_to with_icon(:arrow_left, t("layouts.application.tournaments")), tournaments_path %></p>
       <h1><%= tournament.name %> <%= status_badge(tournament) %></h1>
       <p class="muted"><%= tournament_summary(tournament) %></p>
     </div>
 
     <div class="toolbar">
-      <% if tournament.registration? %>
-        <%= button_to t(".start"), start_tournament_path(tournament), class: "btn btn--primary",
-              disabled: tournament.participations.size < 2,
-              form: { data: { turbo_confirm: t(tournament.round_robin? ? ".confirm_start_all" : ".confirm_start_first") } } %>
-      <% end %>
-      <% if tournament.can_finish? && !tournament.can_pair_next_round? %>
-        <%= button_to t(".finish"), finish_tournament_path(tournament), class: "btn btn--primary",
-              form: { data: { turbo_confirm: t(".confirm_finish") } } %>
-      <% end %>
+      <%= link_to with_icon(:tv, t(".screen")), tournament_screen_path(tournament), class: "btn", target: "_blank", title: t(".screen_hint") %>
       <% if tournament.in_progress? && tab != :members %>
-        <%= link_to t(".add_player"), tournament_path(tournament, anchor: "add-players"), class: "btn" %>
+        <%= link_to with_icon(:user_plus, t(".add_player"), label_class: "btn__label--wide"), tournament_path(tournament, anchor: "add-players"),
+              class: "btn", aria: { label: t(".add_player") } %>
       <% end %>
       <% unless tournament.finished? %>
-        <%= link_to t("shared.edit"), edit_tournament_path(tournament), class: "btn" %>
+        <%= link_to with_icon(:pencil, t("shared.edit"), label_class: "btn__label--wide"), edit_tournament_path(tournament),
+              class: "btn", aria: { label: t("shared.edit") } %>
       <% end %>
       <details class="menu">
-        <summary class="btn btn--ghost" aria-label="<%= t(".more_actions") %>">•••</summary>
+        <summary class="btn btn--icon" aria-label="<%= t(".more_actions") %>" title="<%= t(".more_actions") %>"><%= icon(:ellipsis) %></summary>
         <div class="menu__body">
           <% if tournament.can_finish? && tournament.can_pair_next_round? %>
-            <%= button_to t(".finish_early"), finish_tournament_path(tournament), class: "menu__item",
-                  form: { data: { turbo_confirm: t(".confirm_finish_early") } } %>
+            <%= button_to finish_tournament_path(tournament), class: "menu__item",
+                  form: { data: { turbo_confirm: t(".confirm_finish_early") } } do %>
+              <%= with_icon(:flag, t(".finish_early")) %>
+            <% end %>
           <% end %>
           <% if tournament.can_reset? %>
-            <%= button_to t(".reset"), reset_tournament_path(tournament), class: "menu__item",
-                  form: { data: { turbo_confirm: t(".confirm_reset") } } %>
+            <%= button_to reset_tournament_path(tournament), class: "menu__item",
+                  form: { data: { turbo_confirm: t(".confirm_reset") } } do %>
+              <%= with_icon(:rotate, t(".reset")) %>
+            <% end %>
           <% end %>
-          <%= button_to t(".delete"), tournament, method: :delete, class: "menu__item menu__item--danger",
-                form: { data: { turbo_confirm: t(".confirm_delete", name: tournament.name) } } %>
+          <%= button_to tournament, method: :delete, class: "menu__item menu__item--danger",
+                form: { data: { turbo_confirm: t(".confirm_delete", name: tournament.name) } } do %>
+            <%= with_icon(:trash, t(".delete")) %>
+          <% end %>
         </div>
       </details>
+      <% if tournament.registration? %>
+        <%= button_to start_tournament_path(tournament), class: "btn btn--primary",
+              disabled: tournament.participations.size < 2,
+              form: { data: { turbo_confirm: t(tournament.round_robin? ? ".confirm_start_all" : ".confirm_start_first") } } do %>
+          <%= with_icon(:play, t(".start")) %>
+        <% end %>
+      <% end %>
+      <% if tournament.can_finish? && !tournament.can_pair_next_round? %>
+        <%= button_to finish_tournament_path(tournament), class: "btn btn--primary",
+              form: { data: { turbo_confirm: t(".confirm_finish") } } do %>
+          <%= with_icon(:flag, t(".finish")) %>
+        <% end %>
+      <% end %>
     </div>
   </div>
 
   <nav class="tabs" aria-label="<%= t(".sections") %>">
     <%= link_to tournament_path(tournament), class: class_names("tab", "tab--active": tab == :members) do %>
-      <%= t(".members") %> <span class="tab__count"><%= tournament.participations.size %></span>
+      <%= icon(:users) %> <%= t(".members") %> <span class="tab__count"><%= tournament.participations.size %></span>
     <% end %>
     <% if (round = tournament.current_round) %>
-      <%= link_to t(".pairings"), tournament_round_path(tournament, round), class: class_names("tab", "tab--active": tab == :pairings) %>
+      <%= link_to tournament_round_path(tournament, round), class: class_names("tab", "tab--active": tab == :pairings) do %>
+        <%= icon(:swords) %> <%= t(".pairings") %>
+      <% end %>
     <% else %>
-      <span class="tab tab--disabled" title="<%= t(".pairings_later") %>"><%= t(".pairings") %></span>
+      <span class="tab tab--disabled" title="<%= t(".pairings_later") %>"><%= icon(:swords) %> <%= t(".pairings") %></span>
     <% end %>
-    <%= link_to t(".standings"), tournament_standings_path(tournament), class: class_names("tab", "tab--active": tab == :standings) %>
+    <%= link_to tournament_standings_path(tournament), class: class_names("tab", "tab--active": tab == :standings) do %>
+      <%= icon(:list) %> <%= t(".standings") %>
+    <% end %>
   </nav>
 </header>

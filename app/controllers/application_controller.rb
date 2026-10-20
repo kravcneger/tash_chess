@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  allow_browser versions: :modern
+  # Pages meant for the hall TV opt out (see #any_browser?): TV browsers lag years behind.
+  allow_browser versions: :modern, unless: :any_browser?
 
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
@@ -9,6 +10,10 @@ class ApplicationController < ActionController::Base
   before_action :authenticate
 
   private
+    def any_browser?
+      false
+    end
+
     # One shared login for the whole app (HTTP Basic auth) from BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD.
     # Unless both are set, the app is open to everyone.
     def authenticate

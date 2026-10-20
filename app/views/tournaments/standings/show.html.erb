@@ -25,8 +25,8 @@
         </thead>
         <tbody>
           <% @standings.each do |row| %>
-            <tr class="<%= class_names("standing", "standing--podium": @tournament.finished? && row.rank <= 3) %>">
-              <td class="num rank"><%= row.rank %></td>
+            <tr class="<%= class_names("standing", podium_class(row)) %>">
+              <td class="num rank"><span class="rank__badge"><%= row.rank %></span></td>
               <td>
                 <%= link_to row.player.name, row.player, class: "strong-link" %> <span class="nick">@<%= row.player.nickname %></span>
                 <%= withdrawn_badge if @standings.withdrawn?(row.player) %>
