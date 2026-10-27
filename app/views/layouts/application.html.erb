@@ -32,14 +32,7 @@
           <%= nav_link_to with_icon(:users, t(".players")), players_path, active: controller_name == "players" %>
         </nav>
         <div class="topbar__end">
-          <div class="locale-switch" role="group" aria-label="<%= t(".language") %>">
-            <% I18n.available_locales.each do |locale| %>
-              <%= button_to locale.to_s.upcase, locale_path, method: :patch, params: { locale: },
-                    class: class_names("locale-switch__button", "locale-switch__button--active": locale == I18n.locale),
-                    form_class: "locale-switch__form", lang: locale, title: t("locales.#{locale}"),
-                    aria: { pressed: locale == I18n.locale } %>
-            <% end %>
-          </div>
+          <%= render "layouts/locale_switch" %>
         </div>
       </div>
     </header>

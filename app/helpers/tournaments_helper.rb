@@ -59,4 +59,13 @@ module TournamentsHelper
       end
     end
   end
+
+  # The QR code a member scans to sign in, as inline SVG. Always dark on white with the standard quiet zone of
+  # 4 modules around it, whatever the theme: phone cameras need the contrast.
+  def qr_code(url)
+    qr = RQRCode::QRCode.new(url, level: :m)
+    size = qr.qrcode.module_count + 8
+    modules = qr.as_svg(standalone: false, use_path: true, module_size: 1, offset: 4, fill: "fff", color: "000")
+    tag.svg modules.html_safe, class: "qr", viewBox: "0 0 #{size} #{size}", "shape-rendering": "crispEdges", aria: { hidden: true }
+  end
 end

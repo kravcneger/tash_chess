@@ -1,0 +1,8 @@
+<div class="locale-switch" role="group" aria-label="<%= t(".language") %>">
+  <% I18n.available_locales.each do |locale| %>
+    <%= button_to locale.to_s.upcase, locale_path, method: :patch, params: { locale: },
+          class: class_names("locale-switch__button", "locale-switch__button--active": locale == I18n.locale),
+          form_class: "locale-switch__form", lang: locale, title: t("locales.#{locale}"),
+          aria: { pressed: locale == I18n.locale } %>
+  <% end %>
+</div>

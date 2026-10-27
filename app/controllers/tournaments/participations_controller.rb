@@ -1,6 +1,14 @@
 class Tournaments::ParticipationsController < Tournaments::BaseController
-  before_action :ensure_members_editable
-  before_action :set_participation, only: %i[ destroy withdraw reinstate ]
+  before_action :ensure_members_editable, except: :show
+  before_action :set_participation, only: %i[ show destroy withdraw reinstate ]
+
+  # The member's QR code, for the arbiter to show them; the neighbours in the members list are a tap away.
+  def show
+    members = @tournament.participations.joins(:player).includes(:player).merge(Player.by_rating).to_a
+    index = members.index(@participation)
+    @previous = members[index - 1] if index.positive?
+    @next = members[index + 1]
+  end
 
   def create
     players = Player.where(id: params[:player_ids]).where.not(id: @tournament.players.select(:id)).to_a

@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     end
 
     scope module: :tournaments do
-      resources :participations, only: %i[ create destroy ] do
+      resources :participations, only: %i[ show create destroy ] do
         member do
           post :withdraw
           post :reinstate
@@ -24,6 +24,15 @@ Rails.application.routes.draw do
   end
 
   resources :games, only: :update
+
+  # Members on their phones, without the arbiter's login: the QR code of their participation signs them in to that
+  # tournament, where they follow the standings and enter the result of their game.
+  get "join/:token", to: "play/sessions#create", as: :join
+  scope "play/:tournament_id", module: :play, as: :play do
+    get "/", to: "tournaments#show", as: :tournament
+    resources :games, only: :update
+    resource :session, only: :destroy
+  end
 
   resource :locale, only: :update
 

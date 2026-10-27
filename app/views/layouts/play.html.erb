@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <title><%= [ content_for(:title), "Tash Chess" ].compact.join(" · ") %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex">
+    <meta name="application-name" content="Tash Chess">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= turbo_refresh_method_tag :morph %>
+    <%= turbo_refresh_scroll_tag :preserve %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= render "layouts/fonts" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="play">
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <span class="brand">
+          <%= image_tag "logo.png", class: "brand__mark", alt: "", width: 32, height: 32 %> <span class="brand__name">Tash Chess</span>
+        </span>
+        <div class="topbar__end">
+          <%= render "layouts/locale_switch" %>
+          <% if @participation %>
+            <%= button_to play_session_path(@tournament), method: :delete, class: "btn btn--ghost btn--icon",
+                  title: t(".sign_out"), aria: { label: t(".sign_out") },
+                  form: { data: { turbo_confirm: t(".confirm_sign_out") } } do %>
+              <%= icon(:log_out) %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </header>
+
+    <main class="container main">
+      <%= render "shared/flash" %>
+      <%= yield %>
+    </main>
+  </body>
+</html>

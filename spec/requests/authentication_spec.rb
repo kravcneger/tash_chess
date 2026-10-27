@@ -49,6 +49,25 @@ RSpec.describe "Authentication" do
       get rails_health_check_path
       expect(response).to have_http_status(:success)
     end
+
+    it "lets members in with their QR code instead, to their tournament only" do
+      tournament = create_tournament(players: Player.by_rating.first(2), rounds: 1)
+      participation = tournament.participations.first
+
+      get tournament_participation_path(tournament, participation)
+      expect(response).to have_http_status(:unauthorized), "the codes are for the arbiter to show"
+
+      get join_path(participation.access_token)
+      expect(response).to redirect_to(play_tournament_path(tournament))
+      follow_redirect!
+      expect(response).to have_http_status(:success)
+
+      patch locale_path, params: { locale: "en" }
+      expect(response).to have_http_status(:see_other)
+
+      get tournament_path(tournament)
+      expect(response).to have_http_status(:unauthorized)
+    end
   end
 
   it "stays open without a login set, in production too" do

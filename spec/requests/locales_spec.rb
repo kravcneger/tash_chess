@@ -54,7 +54,9 @@ RSpec.describe "Locales" do
         tournament_path(round_robin), edit_tournament_path(round_robin), tournament_round_path(round_robin, 6),
         tournament_standings_path(round_robin),
         tournament_screen_path(registration), tournament_screen_path(swiss), tournament_screen_path(swiss, view: "standings"),
-        tournament_screen_path(finished), tournament_screen_path(finished, view: "pairings"), tournament_screen_path(round_robin)
+        tournament_screen_path(finished), tournament_screen_path(finished, view: "pairings"), tournament_screen_path(round_robin),
+        tournament_participation_path(registration, registration.participations.first),
+        tournament_participation_path(finished, finished.participations.first)
       ]
     end
 
@@ -65,6 +67,18 @@ RSpec.describe "Locales" do
         paths.each do |path|
           get path
           expect(response).to have_http_status(:success), "#{path} failed in #{locale}"
+          expect(page_lang).to eq(locale.to_s)
+        end
+
+        # What every member sees on their phone: before the start, playing, with a bye, resting, withdrawn, at the end.
+        [ join_path("unknown"), play_tournament_path(Tournament.first) ].each do |path|
+          get path
+          expect(page_lang).to eq(locale.to_s)
+        end
+        Participation.includes(:player).find_each do |member|
+          get join_path(member.access_token)
+          follow_redirect!
+          expect(response).to have_http_status(:success), "#{member.player.name} in tournament #{member.tournament_id} failed in #{locale}"
           expect(page_lang).to eq(locale.to_s)
         end
       end

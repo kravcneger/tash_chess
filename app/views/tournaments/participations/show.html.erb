@@ -1,0 +1,22 @@
+<% player = @participation.player %>
+<% content_for :title, "#{t(".title")} · #{player.name}" %>
+
+<div class="narrow pass">
+  <p class="crumbs"><%= link_to with_icon(:arrow_left, @tournament.name), tournament_path(@tournament) %></p>
+  <h1><%= player.name %> <%= withdrawn_badge if @participation.withdrawn? %></h1>
+  <p class="muted"><%= t(".hint") %></p>
+
+  <div class="pass__code"><%= qr_code(join_url(@participation.access_token)) %></div>
+  <p class="hint pass__link"><%= t(".link") %> <span class="pass__url"><%= join_url(@participation.access_token) %></span></p>
+
+  <nav class="pass__nav" aria-label="<%= t(".members") %>">
+    <% if @previous %>
+      <%= link_to with_icon(:arrow_left, @previous.player.name), tournament_participation_path(@tournament, @previous), class: "btn" %>
+    <% end %>
+    <% if @next %>
+      <%= link_to tournament_participation_path(@tournament, @next), class: "btn pass__next" do %>
+        <span><%= @next.player.name %></span> <%= icon(:arrow_right) %>
+      <% end %>
+    <% end %>
+  </nav>
+</div>

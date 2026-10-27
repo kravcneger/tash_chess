@@ -1,0 +1,9 @@
+<% content_for :title, t(".title") %>
+
+<div class="narrow">
+  <div class="empty play-signin">
+    <%= icon(:qr_code, css: "icon--large") %>
+    <h1><%= t(".title") %></h1>
+    <p><%= t(local_assigns[:invalid] ? ".invalid" : ".scan") %></p>
+  </div>
+</div>

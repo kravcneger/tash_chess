@@ -3,8 +3,8 @@
 A small app for running club chess tournaments: keep a roster of players, create a tournament,
 add its members, pair rounds with board numbers, enter results, and show live standings.
 
-Rails 8.1 · PostgreSQL · Hotwire (Turbo + Stimulus, importmap). No build step and no user accounts, just one
-shared login.
+Rails 8.1 · PostgreSQL · Hotwire (Turbo + Stimulus, importmap). No build step and no user accounts: one shared
+login for the arbiter, and a personal QR code for each member of a tournament.
 
 The interface is in **Russian by default**. The RU / EN switch in the top bar changes the language, and the
 choice is kept in a cookie.
@@ -39,6 +39,8 @@ BASIC_AUTH_USERNAME=arbiter BASIC_AUTH_PASSWORD=... bin/dev
 - Unless both are set, the app is open to everyone, in production too. Set them on any server reachable from
   outside your club. With Kamal, put them in `.env.deploy` (see [GETTING_STARTED.md](GETTING_STARTED.md)).
 - The health check at `/up` stays open for the load balancer.
+- Members' pages (`/join/…`, `/play/…`) don't use it: members sign in with their QR code (see below). The RU / EN
+  switch is open too, since it only sets a cookie.
 - Production forces HTTPS, so the password never travels in clear text.
 
 ## How a tournament runs
@@ -59,6 +61,17 @@ BASIC_AUTH_USERNAME=arbiter BASIC_AUTH_PASSWORD=... bin/dev
 Pairings and standings update live in every open browser (Turbo morph refreshes over Action Cable), so a
 screen in the playing hall stays up to date while the arbiter enters results. **Print pairings** gives a
 clean sheet for the wall.
+
+## Members' phones
+
+Every member of a tournament has a personal QR code. On the **Members** tab, the QR icon next to a player opens it
+full size, with buttons to the previous and next member, so the codes can be shown one after another.
+
+Scanning the code signs that phone in to that tournament only, without the shared login. The member sees the live
+standings with their own row marked and their game of the current round, and enters its result as a win, draw or
+loss from their side of the board. The first result entered by either player counts; after that only the arbiter
+can change it. A phone stays signed in for a year, and the code stops working when the member is removed from the
+tournament.
 
 ## Pairing rules
 

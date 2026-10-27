@@ -1,0 +1,38 @@
+<%# Members see it on their phones: no links to the arbiter's pages there, and their own row stands out. %>
+<% member = local_assigns[:member] %>
+<div class="table-scroll">
+  <table class="table table--standings">
+    <thead>
+      <tr>
+        <th class="num">#</th>
+        <th><%= t(".player") %></th>
+        <th class="num">FIDE</th>
+        <% 1.upto(standings.rounds_count) do |number| %>
+          <th class="round-cell" title="<%= t("tournaments.rounds.show.round", number:) %>"><%= t(".round_short", number:) %></th>
+        <% end %>
+        <th class="num points-col"><%= t(".points") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% standings.each do |row| %>
+        <tr class="<%= class_names("standing", podium_class(row), "standing--me": member && row.player == member) %>">
+          <td class="num rank"><span class="rank__badge"><%= row.rank %></span></td>
+          <td>
+            <% if member %>
+              <span class="strong-link"><%= row.player.name %></span>
+            <% else %>
+              <%= link_to row.player.name, row.player, class: "strong-link" %>
+            <% end %>
+            <span class="nick">@<%= row.player.nickname %></span>
+            <%= withdrawn_badge if standings.withdrawn?(row.player) %>
+          </td>
+          <td class="num"><%= rating(row.player) %></td>
+          <% row.cells.each do |cell| %>
+            <td class="round-cell"><%= standings_cell(cell) %></td>
+          <% end %>
+          <td class="num points-col"><strong><%= format_score(row.points) %></strong></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

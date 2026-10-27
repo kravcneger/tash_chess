@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_16_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_27_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -27,7 +27,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_100000) do
     t.index ["white_player_id"], name: "index_games_on_white_player_id"
     t.check_constraint "(black_player_id IS NULL) = (result::text = 'bye'::text)", name: "games_bye_has_no_opponent"
     t.check_constraint "board > 0", name: "games_board_positive"
-    t.check_constraint "result::text = ANY (ARRAY['pending'::character varying, 'white_won'::character varying, 'black_won'::character varying, 'draw'::character varying, 'bye'::character varying]::text[])", name: "games_result_valid"
+    t.check_constraint "result::text = ANY (ARRAY['pending'::character varying::text, 'white_won'::character varying::text, 'black_won'::character varying::text, 'draw'::character varying::text, 'bye'::character varying::text])", name: "games_result_valid"
     t.check_constraint "white_player_id <> black_player_id", name: "games_distinct_players"
   end
 
@@ -37,6 +37,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_100000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "withdrawn_at"
+    t.string "access_token", null: false
+    t.index ["access_token"], name: "index_participations_on_access_token", unique: true
     t.index ["player_id"], name: "index_participations_on_player_id"
     t.index ["tournament_id", "player_id"], name: "index_participations_on_tournament_id_and_player_id", unique: true
   end
@@ -69,9 +71,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_100000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["status"], name: "index_tournaments_on_status"
-    t.check_constraint "pairing_system::text = ANY (ARRAY['swiss'::character varying, 'round_robin'::character varying]::text[])", name: "tournaments_pairing_system_valid"
+    t.check_constraint "pairing_system::text = ANY (ARRAY['swiss'::character varying::text, 'round_robin'::character varying::text])", name: "tournaments_pairing_system_valid"
     t.check_constraint "rounds_count IS NULL OR rounds_count > 0", name: "tournaments_rounds_count_positive"
-    t.check_constraint "status::text = ANY (ARRAY['registration'::character varying, 'in_progress'::character varying, 'finished'::character varying]::text[])", name: "tournaments_status_valid"
+    t.check_constraint "status::text = ANY (ARRAY['registration'::character varying::text, 'in_progress'::character varying::text, 'finished'::character varying::text])", name: "tournaments_status_valid"
   end
 
   add_foreign_key "games", "players", column: "black_player_id"

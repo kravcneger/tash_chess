@@ -473,6 +473,76 @@ input:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px co
 .live__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); animation: pulse 1.6s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: 0.3; } }
 
+.standing--me td { background: color-mix(in oklab, var(--primary) 7%, transparent); }
+.standing--me td:first-child { box-shadow: inset 3px 0 0 var(--primary); }
+
+/* ---------- Member's QR code (arbiter) ---------- */
+.btn--small.btn--icon { width: 30px; }
+.pass__code {
+  max-width: min(100%, 62vh); margin: 1.25rem auto 0; overflow: hidden;
+  background: #fff; border: 1px solid var(--border); border-radius: calc(var(--radius) + 4px);
+}
+.qr { display: block; width: 100%; height: auto; }
+.pass__link { text-align: center; margin-top: 0.75rem; overflow-wrap: anywhere; }
+.pass__url { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; user-select: all; }
+.pass__nav { display: flex; justify-content: space-between; gap: 0.5rem; margin-top: 1.25rem; }
+.pass__next { margin-left: auto; }
+
+/* ---------- Member's phone ---------- */
+.icon--large { width: 2.5rem; height: 2.5rem; }
+.play-signin { margin-top: 1rem; }
+.play-signin h1 { font-size: 1.35rem; color: var(--foreground); }
+.play-signin p { max-width: 380px; }
+
+.play-head { margin-bottom: 1.25rem; }
+.play-head__who { font-size: 0.9rem; color: var(--muted-foreground); margin-bottom: 0.4rem; }
+.play-head__who strong { color: var(--foreground); }
+.play-stats { display: flex; gap: 0.75rem; margin: 1rem 0 0; }
+.play-stats__item {
+  flex: 1; max-width: 160px; padding: 0.6rem 0.9rem;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-xs);
+}
+.play-stats dt { font-size: 0.8rem; color: var(--muted-foreground); }
+.play-stats dd { margin: 0; font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.my-game { margin-bottom: 1.5rem; }
+.my-game__head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.my-game__board {
+  font-weight: 700; font-size: 0.875rem; white-space: nowrap; padding: 0.2rem 0.75rem; border-radius: 999px;
+  background: var(--primary); color: var(--primary-foreground);
+}
+.my-game__sides { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.my-game__side { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0.9rem; border: 1px solid var(--border); border-radius: var(--radius); }
+.my-game__side .piece { width: 18px; height: 18px; }
+.my-game__side--me { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+.my-game__side.side--won { background: var(--success-soft); }
+.my-game__side.side--lost { background: var(--destructive-soft); }
+.my-game__side.side--drawn { background: var(--draw-soft); }
+.my-game__name { font-weight: 600; font-size: 1.05rem; min-width: 0; }
+.my-game .player__points { display: inline-block; }
+.my-game__ask { font-weight: 600; margin: 1.25rem 0 0.6rem; }
+.my-game__result { display: flex; align-items: center; gap: 0.75rem; margin: 1.1rem 0 0.25rem; }
+
+.outcomes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
+.outcomes__form { margin: 0; }
+.outcome {
+  display: grid; justify-items: center; gap: 0.15rem; width: 100%; padding: 0.85rem 0.4rem; cursor: pointer;
+  font: inherit; color: var(--foreground); background: var(--card);
+  border: 1px solid var(--input); border-radius: var(--radius); transition: border-color 0.15s, box-shadow 0.15s;
+}
+.outcome:hover { border-color: var(--ring); box-shadow: var(--shadow-lg); }
+.outcome__label { font-weight: 650; }
+.outcome__score { font-size: 0.85rem; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+.outcome--won { background: var(--success-soft); }
+.outcome--won .outcome__label { color: var(--win); }
+.outcome--drawn { background: var(--draw-soft); }
+.outcome--drawn .outcome__label { color: var(--draw); }
+.outcome--lost { background: var(--destructive-soft); }
+.outcome--lost .outcome__label { color: var(--loss); }
+.outcome-badge--won { background: var(--success-soft); color: var(--win); }
+.outcome-badge--drawn { background: var(--draw-soft); color: var(--draw); }
+.outcome-badge--lost { background: var(--destructive-soft); color: var(--loss); }
+
 /* ---------- Language switch ---------- */
 .locale-switch { display: inline-flex; padding: 3px; gap: 2px; background: var(--muted); border-radius: var(--radius-sm); }
 .locale-switch__form { margin: 0; display: contents; }

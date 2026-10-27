@@ -1,0 +1,90 @@
+<% content_for :title, @tournament.name %>
+<%= turbo_stream_from @tournament %>
+<% player = @participation.player %>
+<% row = @standings[player] %>
+
+<header class="play-head">
+  <p class="play-head__who"><%= t(".you_html", name: player.name) %></p>
+  <h1><%= @tournament.name %> <%= status_badge(@tournament) %></h1>
+  <p class="muted"><%= tournament_summary(@tournament) %></p>
+
+  <% if row && !@tournament.registration? %>
+    <dl class="play-stats">
+      <div class="play-stats__item"><dt><%= t(".place") %></dt><dd><%= row.rank %></dd></div>
+      <div class="play-stats__item"><dt><%= t(".points") %></dt><dd><%= format_score(row.points) %></dd></div>
+    </dl>
+  <% end %>
+</header>
+
+<% unless @tournament.finished? %>
+  <section class="card my-game" aria-labelledby="my-game-title">
+    <% if @tournament.registration? %>
+      <h2 id="my-game-title"><%= t(".not_started") %></h2>
+      <p class="muted"><%= t(".not_started_hint") %></p>
+    <% elsif @participation.withdrawn? %>
+      <h2 id="my-game-title"><%= t(".withdrawn") %></h2>
+      <p class="muted"><%= t(".withdrawn_hint") %></p>
+    <% elsif @game.nil? %>
+      <h2 id="my-game-title"><%= t(".no_game") %></h2>
+      <p class="muted"><%= t(".no_game_hint") %></p>
+    <% elsif @game.bye? %>
+      <h2 id="my-game-title"><%= t("tournaments.rounds.show.round", number: @game.round.number) %></h2>
+      <p class="muted"><%= @tournament.bye_points.positive? ? t(".bye", points: @tournament.bye_points) : t(".rests") %></p>
+    <% else %>
+      <% color = member_color(@game, player) %>
+      <div class="my-game__head">
+        <h2 id="my-game-title"><%= t(".your_game", number: @game.round.number) %></h2>
+        <span class="my-game__board"><%= t("tournaments.rounds.show.board_number", number: @game.board) %></span>
+      </div>
+
+      <ul class="my-game__sides">
+        <% { white: @game.white_player, black: @game.black_player }.each do |side, side_player| %>
+          <li class="<%= class_names("my-game__side", outcome_class(@game, side), "my-game__side--me": side == color) %>">
+            <%= piece_color(side) %>
+            <span class="my-game__name"><%= side_player.name %><% if side == color %> <span class="nick"><%= t(".you_mark") %></span><% end %></span>
+            <% if (points = @standings[side_player]&.points_before(@game.round.number)) %>
+              <span class="player__points" title="<%= t("tournaments.rounds.player.points_before") %>"><%= format_score(points) %></span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+
+      <% if @participation.can_report?(@game) %>
+        <p class="my-game__ask"><%= t(".how_did_it_end") %></p>
+        <div class="outcomes">
+          <% member_results(color).each do |outcome, result| %>
+            <%= button_to play_game_path(@tournament, @game), method: :patch, params: { game: { result: } },
+                  class: "outcome outcome--#{outcome}", form_class: "outcomes__form",
+                  form: { data: { turbo_confirm: t(".confirm.#{outcome}", score: Game::RESULT_LABELS[result]) } } do %>
+              <span class="outcome__label"><%= t(".outcomes.#{outcome}") %></span>
+              <span class="outcome__score"><%= Game::RESULT_LABELS[result] %></span>
+            <% end %>
+          <% end %>
+        </div>
+        <p class="hint"><%= t(".report_hint") %></p>
+      <% elsif (outcome = game_outcome(@game, color)) %>
+        <p class="my-game__result">
+          <span class="result-final"><%= @game.result_label %></span>
+          <span class="badge outcome-badge--<%= outcome %>"><%= t(".outcomes.#{outcome}") %></span>
+        </p>
+        <p class="hint"><%= t(".result_in") %></p>
+      <% end %>
+    <% end %>
+  </section>
+<% end %>
+
+<section class="card card--flush" aria-labelledby="standings-title">
+  <div class="card__head">
+    <h2 id="standings-title"><%= t(@tournament.finished? ? "tournaments.standings.show.final" : "tournaments.standings.show.current") %></h2>
+    <% if @tournament.in_progress? %>
+      <span class="live" title="<%= t("tournaments.standings.show.live_hint") %>"><span class="live__dot"></span> <%= t("tournaments.standings.show.live") %></span>
+    <% end %>
+  </div>
+
+  <%= render "tournaments/standings/table", standings: @standings, member: player %>
+</section>
+
+<p class="hint legend">
+  <%= t(@tournament.swiss? ? "tournaments.standings.show.tiebreaks_swiss" : "tournaments.standings.show.tiebreaks_round_robin") %>
+  <%= t("tournaments.standings.show.legend_html", white: piece_color(:white), black: piece_color(:black)) %>
+</p>

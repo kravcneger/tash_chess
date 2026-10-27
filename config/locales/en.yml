@@ -14,7 +14,11 @@ en:
     application:
       tournaments: Tournaments
       players: Players
+    locale_switch:
       language: Language
+    play:
+      sign_out: Sign out
+      confirm_sign_out: Sign out? You'll need your QR code from the arbiter to sign in again.
 
   authentication:
     denied: A username and password are required.
@@ -138,6 +142,8 @@ en:
       everyone_added: Everyone in the roster is already a member.
       not_in_roster: Not in the roster?
       register_player: Register a new player
+      show_code: Sign-in QR code
+      show_code_of: "Sign-in QR code for %{name}"
     withdrawn: Withdrawn
     late_entry:
       next_round: New members play from the next round.
@@ -163,6 +169,11 @@ en:
       reopened: Pairings were removed. The tournament is open for registration again.
     participations:
       locked: Members can't be changed at this stage of the tournament.
+      show:
+        title: QR code
+        hint: "Let the player scan the code with their phone camera: they'll see the standings and can enter the result of their game."
+        link: "Or open the link:"
+        members: Members
       create:
         added:
           one: "1 player joined the tournament."
@@ -210,13 +221,14 @@ en:
         current: Current standings
         live: Live
         live_hint: Updates by itself when a result is entered
-        player: Player
-        round_short: "R%{number}"
-        points: Points
         no_members: No members yet.
         tiebreaks_swiss: Ties are broken by Buchholz, then Sonneborn-Berger, then wins.
         tiebreaks_round_robin: Ties are broken by Sonneborn-Berger, then wins.
         legend_html: "In round cells: %{white} / %{black} color played, “+” bye, “–” rested, “…” in play."
+      table:
+        player: Player
+        round_short: "R%{number}"
+        points: Points
 
     screens:
       show:
@@ -257,6 +269,47 @@ en:
   games:
     update:
       locked: This result can't be changed.
+
+  play:
+    sessions:
+      new:
+        title: Sign in with a QR code
+        scan: Ask the arbiter to show your QR code and scan it with your phone camera.
+        invalid: This QR code doesn't work. Ask the arbiter to show it again.
+      create:
+        signed_in: "Signed in as %{name}."
+      destroy:
+        signed_out: You've signed out.
+    tournaments:
+      show:
+        you_html: "You: <strong>%{name}</strong>"
+        place: Place
+        points: Points
+        not_started: The tournament hasn't started yet
+        not_started_hint: Your game will appear here once the arbiter pairs the round.
+        withdrawn: You've withdrawn from the tournament
+        withdrawn_hint: Your games stay in the standings, but you won't be paired again.
+        no_game: You have no game this round
+        no_game_hint: Your game will appear here once you're in the pairings.
+        bye: "You have no opponent this round: +%{points} to your score."
+        rests: You rest this round.
+        your_game: "Your game · round %{number}"
+        you_mark: (you)
+        how_did_it_end: How did the game end?
+        outcomes:
+          won: Win
+          drawn: Draw
+          lost: Loss
+        confirm:
+          won: "Record your win (%{score})? Only the arbiter can change it afterwards."
+          drawn: "Record a draw (%{score})? Only the arbiter can change it afterwards."
+          lost: "Record your loss (%{score})? Only the arbiter can change it afterwards."
+        report_hint: Either player can enter the result. After that only the arbiter can change it.
+        result_in: The result is in. If it's wrong, tell the arbiter.
+    games:
+      update:
+        saved: Result recorded. Thanks!
+        locked: The result is already in or can't be changed. Please ask the arbiter.
 
   standings_cell:
     bye: Bye

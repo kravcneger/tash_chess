@@ -22,7 +22,7 @@
             <th class="num">#</th>
             <th><%= t(".player") %></th>
             <th class="num">FIDE</th>
-            <% if @tournament.members_editable? %><th class="actions"><span class="visually-hidden"><%= t("shared.actions") %></span></th><% end %>
+            <th class="actions"><span class="visually-hidden"><%= t("shared.actions") %></span></th>
           </tr>
         </thead>
         <tbody>
@@ -35,8 +35,10 @@
                 <%= withdrawn_badge if participation.withdrawn? %>
               </td>
               <td class="num"><%= rating(player) %></td>
-              <% if @tournament.members_editable? %>
-                <td class="actions">
+              <td class="actions">
+                <%= link_to icon(:qr_code), tournament_participation_path(@tournament, participation), class: "btn btn--small btn--ghost btn--icon",
+                      title: t(".show_code"), aria: { label: t(".show_code_of", name: player.name) } %>
+                <% if @tournament.members_editable? %>
                   <% if participation.withdrawn? %>
                     <%= button_to t(".reinstate"), reinstate_tournament_participation_path(@tournament, participation),
                           class: "btn btn--small btn--ghost", aria: { label: t(".reinstate_player", name: player.name) } %>
@@ -48,8 +50,8 @@
                     <%= button_to t(".remove"), tournament_participation_path(@tournament, participation), method: :delete,
                           class: "btn btn--small btn--ghost", aria: { label: t(".remove_player", name: player.name) } %>
                   <% end %>
-                </td>
-              <% end %>
+                <% end %>
+              </td>
             </tr>
           <% end %>
         </tbody>
