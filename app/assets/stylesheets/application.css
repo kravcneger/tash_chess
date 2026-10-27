@@ -543,6 +543,24 @@ input:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px co
 .outcome-badge--drawn { background: var(--draw-soft); color: var(--draw); }
 .outcome-badge--lost { background: var(--destructive-soft); color: var(--loss); }
 
+/* ---------- Countdown to the next round ---------- */
+.countdown-badge { display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+.countdown-form { display: grid; gap: 0.45rem; padding: 0.5rem 0.55rem 0.35rem; }
+.countdown-form label { font-weight: 500; font-size: 0.875rem; }
+.countdown-form__row { display: flex; gap: 0.5rem; }
+.countdown-form input { max-width: 96px; }
+.countdown-form .btn { height: 40px; }
+
+.countdown {
+  display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1.5rem; padding: 1rem 1.25rem;
+  background: var(--primary); color: var(--primary-foreground); border-radius: calc(var(--radius) + 4px);
+}
+.countdown__icon { width: 2rem; height: 2rem; }
+.countdown__running { flex: 1; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.25rem 1rem; }
+.countdown__label { font-weight: 500; opacity: 0.8; }
+.countdown__time { font-size: 2.25rem; font-weight: 750; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.countdown__over { font-size: 1.25rem; font-weight: 700; }
+
 /* ---------- Language switch ---------- */
 .locale-switch { display: inline-flex; padding: 3px; gap: 2px; background: var(--muted); border-radius: var(--radius-sm); }
 .locale-switch__form { margin: 0; display: contents; }

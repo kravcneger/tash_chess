@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       end
       resources :rounds, only: %i[ show create destroy ], param: :number
       resource :standings, only: :show
+      resource :countdown, only: %i[ create destroy ]
       resource :screen, only: :show
     end
   end

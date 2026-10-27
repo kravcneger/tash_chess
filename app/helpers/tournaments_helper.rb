@@ -60,6 +60,17 @@ module TournamentsHelper
     end
   end
 
+  # Seconds left before the next round, if the arbiter started a countdown. The page passes them on to the
+  # countdown script instead of the moment itself, so a phone with its clock off still counts right.
+  def countdown_seconds(tournament)
+    (tournament.next_round_starts_at - Time.current).ceil if tournament.countdown_running?
+  end
+
+  # 300 → "5:00", 59 → "0:59", like the countdown script shows them.
+  def format_countdown(seconds)
+    format("%d:%02d", *seconds.divmod(60))
+  end
+
   # The QR code a member scans to sign in, as inline SVG. Always dark on white with the standard quiet zone of
   # 4 modules around it, whatever the theme: phone cameras need the contrast.
   def qr_code(url)

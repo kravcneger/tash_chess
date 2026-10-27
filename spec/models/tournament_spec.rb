@@ -248,4 +248,48 @@ RSpec.describe Tournament do
         .and(not_change(Player, :count))
     end
   end
+
+  describe "#start_countdown" do
+    include ActiveSupport::Testing::TimeHelpers
+
+    let(:tournament) { create_tournament(players: four_players, rounds: 3) }
+
+    it "sets when the next round starts, until then" do
+      freeze_time do
+        expect(tournament.start_countdown("5")).to be(true)
+        expect(tournament.reload.next_round_starts_at).to eq(5.minutes.from_now)
+        expect(tournament).to be_countdown_running
+      end
+
+      travel 6.minutes
+      expect(tournament).not_to be_countdown_running
+    end
+
+    it "takes 1 to 120 minutes" do
+      [ "0", "121", "2.5", "five", "", nil ].each do |minutes|
+        expect(tournament.start_countdown(minutes)).to be(false), minutes.inspect
+      end
+      expect(tournament.errors).to be_of_kind(:base, :countdown_minutes)
+      expect(tournament.reload.next_round_starts_at).to be_nil
+
+      expect(tournament.start_countdown(120)).to be(true), "an earlier refusal doesn't get in the way"
+    end
+
+    it "stops with the tournament" do
+      tournament.start_countdown(5)
+      tournament.update!(status: :finished)
+
+      expect(tournament).not_to be_countdown_running
+      expect(tournament.start_countdown(5)).to be(false)
+      expect(tournament.errors).to be_of_kind(:base, :countdown_finished)
+    end
+
+    it "can be cancelled" do
+      tournament.start_countdown(5)
+      tournament.cancel_countdown
+
+      expect(tournament.reload.next_round_starts_at).to be_nil
+      expect(tournament).not_to be_countdown_running
+    end
+  end
 end

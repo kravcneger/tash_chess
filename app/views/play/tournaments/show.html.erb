@@ -16,6 +16,17 @@
   <% end %>
 </header>
 
+<% if (seconds = countdown_seconds(@tournament)) %>
+  <div class="countdown" role="timer" data-controller="countdown" data-countdown-seconds-value="<%= seconds %>">
+    <%= icon(:timer, css: "countdown__icon") %>
+    <span class="countdown__running" data-countdown-target="running">
+      <span class="countdown__label"><%= t(".countdown") %></span>
+      <span class="countdown__time" data-countdown-target="time"><%= format_countdown(seconds) %></span>
+    </span>
+    <span class="countdown__over" data-countdown-target="over" hidden><%= t(".countdown_over") %></span>
+  </div>
+<% end %>
+
 <% unless @tournament.finished? %>
   <section class="card my-game" aria-labelledby="my-game-title">
     <% if @tournament.registration? %>

@@ -18,6 +18,35 @@
         <%= link_to with_icon(:pencil, t("shared.edit"), label_class: "btn__label--wide"), edit_tournament_path(tournament),
               class: "btn", aria: { label: t("shared.edit") } %>
       <% end %>
+      <% unless tournament.finished? %>
+        <% seconds = countdown_seconds(tournament) %>
+        <details class="menu">
+          <%= tag.summary class: "btn", title: t(".countdown_hint"), aria: { label: (t(".countdown") unless seconds) } do %>
+            <% if seconds %>
+              <span class="countdown-badge" data-controller="countdown" data-countdown-seconds-value="<%= seconds %>">
+                <%= icon(:timer) %> <span data-countdown-target="time"><%= format_countdown(seconds) %></span>
+              </span>
+            <% else %>
+              <%= with_icon(:timer, t(".countdown"), label_class: "btn__label--wide") %>
+            <% end %>
+          <% end %>
+          <div class="menu__body">
+            <%= form_with url: tournament_countdown_path(tournament), class: "countdown-form" do |form| %>
+              <%= form.label :minutes, t(".countdown_minutes") %>
+              <div class="countdown-form__row">
+                <%= form.number_field :minutes, value: 5, min: Tournament::COUNTDOWN_MINUTES.min, max: Tournament::COUNTDOWN_MINUTES.max, required: true %>
+                <%= form.button t(".countdown_start"), class: "btn btn--primary" %>
+              </div>
+              <p class="hint"><%= t(".countdown_hint") %></p>
+            <% end %>
+            <% if seconds %>
+              <%= button_to tournament_countdown_path(tournament), method: :delete, class: "menu__item menu__item--danger" do %>
+                <%= with_icon(:x, t(".countdown_cancel")) %>
+              <% end %>
+            <% end %>
+          </div>
+        </details>
+      <% end %>
       <details class="menu">
         <summary class="btn btn--icon" aria-label="<%= t(".more_actions") %>" title="<%= t(".more_actions") %>"><%= icon(:ellipsis) %></summary>
         <div class="menu__body">

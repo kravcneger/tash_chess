@@ -73,6 +73,10 @@ loss from their side of the board. The first result entered by either player cou
 can change it. A phone stays signed in for a year, and the code stops working when the member is removed from the
 tournament.
 
+Before a round, the arbiter can tell everyone when it starts: **Таймер / Timer** in the tournament header takes the
+number of minutes (1–120). Members' phones then count down the minutes and seconds left, and the header shows the
+same count to the arbiter until the timer runs out or is cleared.
+
 ## Pairing rules
 
 **Round robin**: FIDE Berger tables. Members are seeded by rating. With an odd count, one player rests

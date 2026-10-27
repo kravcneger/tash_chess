@@ -43,6 +43,7 @@ RSpec.describe "Locales" do
       finished.finish
       round_robin = create_tournament(system: :round_robin, rounds: 6, players: Player.by_rating.first(4))
       round_robin.start
+      [ registration, swiss ].each { |tournament| tournament.start_countdown(5) }
 
       [
         root_path, new_tournament_path, players_path, players_path(query: "zzz"), new_player_path(tournament_id: registration.id),

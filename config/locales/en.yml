@@ -114,6 +114,11 @@ en:
       standings: Standings
       screen: Hall screen
       screen_hint: Pairings and standings in large type, for the TV in the playing hall
+      countdown: Timer
+      countdown_hint: Countdown to the start of the round, shown on the players' phones
+      countdown_minutes: Minutes until the round starts
+      countdown_start: Start
+      countdown_cancel: Clear the timer
     show:
       round_on: "Round %{number} is on."
       see_pairings: See who plays whom →
@@ -167,6 +172,13 @@ en:
       finished: The tournament is finished. Final standings below.
     reset:
       reopened: Pairings were removed. The tournament is open for registration again.
+    countdowns:
+      create:
+        started:
+          one: "Countdown started: the round starts in %{count} minute."
+          other: "Countdown started: the round starts in %{count} minutes."
+      destroy:
+        cancelled: Timer cleared.
     participations:
       locked: Members can't be changed at this stage of the tournament.
       show:
@@ -306,6 +318,8 @@ en:
           lost: "Record your loss (%{score})? Only the arbiter can change it afterwards."
         report_hint: Either player can enter the result. After that only the arbiter can change it.
         result_in: The result is in. If it's wrong, tell the arbiter.
+        countdown: Round starts in
+        countdown_over: The round is starting!
     games:
       update:
         saved: Result recorded. Thanks!
@@ -413,3 +427,5 @@ en:
               cannot_delete_round: Only the latest round of a running Swiss tournament can be deleted
               cannot_withdraw: Only a member still playing in a running tournament can withdraw
               cannot_reinstate: Only a member who withdrew from a running tournament can be brought back
+              countdown_finished: The tournament is already finished
+              countdown_minutes: "Time until the round starts must be 1 to %{max} minutes"

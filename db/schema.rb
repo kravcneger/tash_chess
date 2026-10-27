@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_27_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_28_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -70,6 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_100000) do
     t.string "status", default: "registration", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "next_round_starts_at"
     t.index ["status"], name: "index_tournaments_on_status"
     t.check_constraint "pairing_system::text = ANY (ARRAY['swiss'::character varying::text, 'round_robin'::character varying::text])", name: "tournaments_pairing_system_valid"
     t.check_constraint "rounds_count IS NULL OR rounds_count > 0", name: "tournaments_rounds_count_positive"

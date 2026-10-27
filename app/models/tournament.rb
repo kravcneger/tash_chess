@@ -1,5 +1,6 @@
 class Tournament < ApplicationRecord
   MAX_ROUNDS = 50
+  COUNTDOWN_MINUTES = 1..120
 
   enum :pairing_system, { swiss: "swiss", round_robin: "round_robin" }, validate: true
   enum :status, { registration: "registration", in_progress: "in_progress", finished: "finished" }, default: :registration
@@ -213,6 +214,28 @@ class Tournament < ApplicationRecord
 
   def standings
     Standings.new(self)
+  end
+
+  # The arbiter announces when the next round starts, and members see the time left on their phones.
+  def start_countdown(minutes)
+    minutes = Integer(minutes, exception: false)
+    if finished?
+      errors.add(:base, :countdown_finished)
+      false
+    elsif !minutes.in?(COUNTDOWN_MINUTES)
+      errors.add(:base, :countdown_minutes, max: COUNTDOWN_MINUTES.max)
+      false
+    else
+      update(next_round_starts_at: minutes.minutes.from_now)
+    end
+  end
+
+  def cancel_countdown
+    update(next_round_starts_at: nil)
+  end
+
+  def countdown_running?
+    !finished? && next_round_starts_at.present? && next_round_starts_at.future?
   end
 
   private
