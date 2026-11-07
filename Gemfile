@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.1.3"
+gem "rails", "~> 8.1.4"
 # Locale data for Rails: Russian validation messages, dates and plural rules [https://github.com/svenfuchs/rails-i18n]
 gem "rails-i18n", "~> 8.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
