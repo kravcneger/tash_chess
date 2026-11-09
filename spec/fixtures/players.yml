@@ -1,11 +1,13 @@
 anna:
   name: Anna Kowalska
   nickname: anna_k
+  telegram: anna_kowalska
   fide_rating: 2215
 
 boris:
   name: Boris Lebedev
   nickname: boris
+  telegram: boris_lebedev
   fide_rating: 2140
 
 chen:

@@ -40,6 +40,28 @@ RSpec.describe Player do
     expect(Player.new(name: "Okay", nickname: "okay", fide_rating: 1400)).to be_valid
   end
 
+  describe "telegram" do
+    it "keeps just the username, however it's typed in" do
+      [ "anna_t", " @anna_t ", "https://t.me/anna_t", "t.me/anna_t" ].each do |typed|
+        expect(Player.new(telegram: typed).telegram).to eq("anna_t"), "from #{typed.inspect}"
+      end
+    end
+
+    it "is optional" do
+      player = Player.new(name: "New Player", nickname: "newbie", telegram: " ")
+
+      expect(player).to be_valid
+      expect(player.telegram).to be_nil
+    end
+
+    it "must be a Telegram username" do
+      player = Player.new(name: "New Player", nickname: "newbie", telegram: "+7 999 123-45-67")
+
+      expect(player).not_to be_valid
+      expect(player.errors).to be_of_kind(:telegram, :invalid)
+    end
+  end
+
   describe ".search" do
     it "matches the name or nickname case-insensitively" do
       expect(Player.search("KOWAL")).to contain_exactly(players(:anna))

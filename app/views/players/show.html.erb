@@ -4,7 +4,13 @@
   <div>
     <p class="crumbs"><%= link_to with_icon(:arrow_left, t("layouts.application.players")), players_path %></p>
     <h1><%= @player.name %></h1>
-    <p class="muted"><span class="nick">@<%= @player.nickname %></span> · FIDE <%= rating(@player) %></p>
+    <p class="muted">
+      <span class="nick">@<%= @player.nickname %></span> · FIDE <%= rating(@player) %>
+      <% if @player.telegram %>
+        · <%= link_to "Telegram @#{@player.telegram}", "https://t.me/#{@player.telegram}",
+                target: "_blank", rel: "noopener" %>
+      <% end %>
+    </p>
   </div>
   <div class="toolbar">
     <%= link_to with_icon(:pencil, t("shared.edit")), edit_player_path(@player), class: "btn" %>

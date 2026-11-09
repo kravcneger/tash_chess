@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_28_110000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -49,6 +49,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_100000) do
     t.integer "fide_rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "telegram"
     t.index "lower((nickname)::text)", name: "index_players_on_lower_nickname", unique: true
     t.check_constraint "fide_rating >= 1000 AND fide_rating <= 3000", name: "players_fide_rating_range"
   end

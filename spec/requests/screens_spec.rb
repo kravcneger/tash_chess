@@ -44,6 +44,24 @@ RSpec.describe "Hall screen" do
     expect(page_html.css(".tv-live")).to be_empty
   end
 
+  it "never shows the players' Telegram" do
+    usernames = tournament.players.where.not(telegram: nil).pluck(:telegram)
+    expect(usernames).to be_present
+
+    get tournament_screen_path(tournament)
+    pages = [ response.body ]
+    tournament.start
+    %w[ pairings standings ].each do |view|
+      get tournament_screen_path(tournament, view:)
+      pages << response.body
+    end
+
+    pages.each do |page|
+      expect(page).not_to include("t.me/")
+      usernames.each { |username| expect(page).not_to include(username) }
+    end
+  end
+
   it "keeps the options when switching views" do
     get tournament_screen_path(tournament, view: "standings", rotate: 30, theme: "light")
 

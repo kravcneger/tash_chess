@@ -57,6 +57,6 @@ class PlayersController < ApplicationController
     end
 
     def player_params
-      params.expect(player: %i[ name nickname fide_rating ])
+      params.expect(player: %i[ name nickname fide_rating telegram ])
     end
 end

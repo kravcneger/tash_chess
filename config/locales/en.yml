@@ -48,6 +48,7 @@ en:
     form:
       nickname_hint: Must be unique. Letters, digits, dots, dashes and underscores.
       rating_hint: Optional. Used to seed the pairings.
+      telegram_hint: Optional. Only you see it, here in the roster; members and the hall screen never do.
     new:
       title: New player
       joins_tournament_html: "The player will join <strong>%{tournament}</strong> right away."
@@ -364,6 +365,7 @@ en:
         name: Name
         nickname: Nickname
         fide_rating: FIDE rating
+        telegram: Telegram
       tournament:
         name: Name
         location: Location
@@ -399,6 +401,8 @@ en:
           attributes:
             nickname:
               invalid: may contain only letters, digits, dots, dashes and underscores
+            telegram:
+              invalid: "must be a username: 5 to 32 Latin letters, digits and underscores"
             base:
               games_played: "%{name} has already played tournament games and can't be deleted"
         participation:

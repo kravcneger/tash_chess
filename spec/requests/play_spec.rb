@@ -91,6 +91,23 @@ RSpec.describe "Members on their phones" do
     expect(response).to have_http_status(:unauthorized)
   end
 
+  it "never shows a member anyone's Telegram, their own included" do
+    usernames = tournament.players.where.not(telegram: nil).pluck(:telegram)
+    expect(usernames).to contain_exactly(players(:anna).telegram, players(:boris).telegram)
+    join(participation)
+
+    get play_tournament_path(tournament)
+    pages = [ response.body ]
+    tournament.start
+    get play_tournament_path(tournament)
+    pages << response.body
+
+    pages.each do |page|
+      expect(page).not_to include("t.me/")
+      usernames.each { |username| expect(page).not_to include(username) }
+    end
+  end
+
   describe "entering a result" do
     before { tournament.start }
 

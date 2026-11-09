@@ -13,12 +13,21 @@ RSpec.describe "Players" do
 
   it "creates a player" do
     expect {
-      post players_path, params: { player: { name: "Magnus Test", nickname: "magnus", fide_rating: "2500" } }
+      post players_path, params: { player: { name: "Magnus Test", nickname: "magnus", fide_rating: "2500", telegram: "@magnus_t" } }
     }.to change(Player, :count).by(1)
 
     player = Player.find_by!(nickname: "magnus")
     expect(response).to redirect_to(player_path(player))
     expect(player.fide_rating).to eq(2500)
+    expect(player.telegram).to eq("magnus_t")
+  end
+
+  it "shows the arbiter the player's Telegram" do
+    get player_path(players(:anna))
+    expect(page_html.css("a[href='https://t.me/anna_kowalska']").map(&:text)).to eq([ "Telegram @anna_kowalska" ])
+
+    get player_path(players(:hana))
+    expect(page_html.css("a[href^='https://t.me/']")).to be_empty
   end
 
   it "creates a player without a rating straight into a tournament" do
