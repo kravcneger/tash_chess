@@ -27,6 +27,11 @@
   </div>
 <% end %>
 
+<% if @tournament.quiz_url %>
+  <%= link_to with_icon(:circle_help, t(".quiz")), @tournament.quiz_url_for(player),
+        class: "btn btn--primary btn--large quiz-link", target: "_blank", rel: "noopener" %>
+<% end %>
+
 <% unless @tournament.finished? %>
   <section class="card my-game" aria-labelledby="my-game-title">
     <% if @tournament.registration? %>

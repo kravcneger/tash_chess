@@ -46,6 +46,12 @@
     <% end %>
   </div>
 
+  <div class="field">
+    <%= form.label :quiz_url %>
+    <%= form.url_field :quiz_url, maxlength: 500, placeholder: t(".optional"), autocomplete: "off" %>
+    <p class="hint"><%= t(".quiz_url_hint") %></p>
+  </div>
+
   <div class="form__actions">
     <%= form.submit class: "btn btn--primary" %>
     <%= link_to t("shared.cancel"), tournament.persisted? ? tournament : tournaments_path, class: "btn btn--ghost" %>

@@ -505,6 +505,8 @@ input:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px co
 .play-stats dt { font-size: 0.8rem; color: var(--muted-foreground); }
 .play-stats dd { margin: 0; font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 
+.quiz-link { display: flex; width: 100%; margin-bottom: 1.5rem; }
+
 .my-game { margin-bottom: 1.5rem; }
 .my-game__head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
 .my-game__board {

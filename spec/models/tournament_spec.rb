@@ -8,6 +8,33 @@ RSpec.describe Tournament do
     expect(Tournament.new(name: "RR", pairing_system: :round_robin)).to be_valid
   end
 
+  describe "quiz link" do
+    let(:tournament) { create_tournament(players: [ players(:anna) ]) }
+
+    it "comes to each member with their name as the login" do
+      tournament.update!(quiz_url: " https://quiz.example.org/join/Ab3dE6gH ")
+
+      expect(tournament.quiz_url).to eq("https://quiz.example.org/join/Ab3dE6gH")
+      expect(tournament.quiz_url_for(players(:anna))).to eq("https://quiz.example.org/join/Ab3dE6gH?login=Anna+Kowalska")
+    end
+
+    it "keeps what the link already has, with the member's login last" do
+      tournament.update!(quiz_url: "https://quiz.example.org/join/Ab3dE6gH?login=Test#top")
+
+      expect(tournament.quiz_url_for(players(:anna))).to eq("https://quiz.example.org/join/Ab3dE6gH?login=Test&login=Anna+Kowalska#top")
+    end
+
+    it "is optional, but must be a web link" do
+      expect(tournament.update(quiz_url: " ")).to be(true)
+      expect(tournament.quiz_url).to be_nil
+
+      [ "quiz.example.org/join/Ab3dE6gH", "javascript:alert(1)", "https://", "https://quiz example.org" ].each do |url|
+        expect(tournament.update(quiz_url: url)).to be(false), url
+        expect(tournament.errors).to be_of_kind(:quiz_url, :invalid)
+      end
+    end
+  end
+
   describe "#start" do
     it "needs at least two members" do
       tournament = create_tournament(players: [ players(:anna) ])

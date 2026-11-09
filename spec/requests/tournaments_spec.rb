@@ -122,6 +122,22 @@ RSpec.describe "Tournaments" do
     expect(participation.reload).not_to be_withdrawn
   end
 
+  it "keeps a quiz link for the members, also once the tournament runs" do
+    tournament = create_tournament(players: Player.by_rating.first(2), rounds: 1)
+    tournament.start
+
+    get edit_tournament_path(tournament)
+    expect(page_html.css("input[type=url][name='tournament[quiz_url]']")).to be_present
+
+    patch tournament_path(tournament), params: { tournament: { quiz_url: "https://quiz.example.org/join/Ab3dE6gH" } }
+    expect(response).to redirect_to(tournament_path(tournament))
+    expect(tournament.reload.quiz_url).to eq("https://quiz.example.org/join/Ab3dE6gH")
+
+    patch tournament_path(tournament), params: { tournament: { quiz_url: "quiz.example.org" } }
+    expect(response).to have_http_status(:unprocessable_content)
+    expect(texts(".form-errors li")).to eq([ "#{Tournament.human_attribute_name(:quiz_url)} #{I18n.t("activerecord.errors.models.tournament.attributes.quiz_url.invalid")}" ])
+  end
+
   it "doesn't add members to a finished tournament" do
     tournament = create_tournament(players: Player.by_rating.first(2), rounds: 1)
     tournament.start

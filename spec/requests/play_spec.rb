@@ -91,6 +91,17 @@ RSpec.describe "Members on their phones" do
     expect(response).to have_http_status(:unauthorized)
   end
 
+  it "gives a member the quiz link with their name in it" do
+    join(participation)
+    get play_tournament_path(tournament)
+    expect(page_html.css("a.quiz-link")).to be_empty
+
+    tournament.update!(quiz_url: "https://quiz.example.org/join/Ab3dE6gH")
+    get play_tournament_path(tournament)
+    expect(page_html.css("a.quiz-link").map { |link| link["href"] }).to eq([ "https://quiz.example.org/join/Ab3dE6gH?login=Anna+Kowalska" ])
+    expect(texts("a.quiz-link")).to eq([ I18n.t("play.tournaments.show.quiz") ])
+  end
+
   it "never shows a member anyone's Telegram, their own included" do
     usernames = tournament.players.where.not(telegram: nil).pluck(:telegram)
     expect(usernames).to contain_exactly(players(:anna).telegram, players(:boris).telegram)

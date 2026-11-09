@@ -12,9 +12,12 @@ class Tournament < ApplicationRecord
   has_many :games, through: :rounds
 
   normalizes :name, :location, with: ->(value) { value.squish.presence }
+  normalizes :quiz_url, with: ->(value) { value.strip.presence }
 
   validates :name, presence: true, length: { maximum: 120 }
   validates :location, length: { maximum: 120 }
+  validates :quiz_url, length: { maximum: 500 }
+  validate :quiz_url_is_a_web_link, if: :quiz_url?
   # A round robin may leave it blank: one full cycle, decided when the tournament starts.
   validates :rounds_count, presence: true, if: -> { swiss? || !registration? }
   validates :rounds_count, numericality: { only_integer: true, in: 1..MAX_ROUNDS }, allow_nil: true
@@ -25,6 +28,14 @@ class Tournament < ApplicationRecord
   broadcasts_refreshes
 
   scope :ordered, -> { in_order_of(:status, %w[ in_progress registration finished ]).order(starts_on: :desc, created_at: :desc) }
+
+  # The quiz link as a member gets it: with their name as `login`, so the quiz signs them in under it without asking.
+  # A `login` already in the link comes earlier, and the quiz takes the last one.
+  def quiz_url_for(player)
+    uri = URI.parse(quiz_url)
+    uri.query = [ uri.query.presence, URI.encode_www_form(login: player.name) ].compact.join("&")
+    uri.to_s
+  end
 
   def pairing_system_label
     self.class.human_enum_name(:pairing_system, pairing_system)
@@ -247,6 +258,13 @@ class Tournament < ApplicationRecord
       games.pending.merge(player.games).each do |game|
         game.update!(result: game.white_player_id == player.id ? :black_won : :white_won)
       end
+    end
+
+    def quiz_url_is_a_web_link
+      uri = URI.parse(quiz_url)
+      errors.add(:quiz_url, :invalid) unless uri.is_a?(URI::HTTP) && uri.host.present?
+    rescue URI::InvalidURIError
+      errors.add(:quiz_url, :invalid)
     end
 
     def pairing_system_unchanged_after_start

@@ -71,7 +71,7 @@ class TournamentsController < ApplicationController
     end
 
     def tournament_params
-      permitted = %i[ name location starts_on rounds_count ]
+      permitted = %i[ name location starts_on rounds_count quiz_url ]
       permitted << :pairing_system if @tournament.nil? || @tournament.registration?
       params.expect(tournament: permitted)
     end

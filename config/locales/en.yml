@@ -81,6 +81,7 @@ en:
     form:
       name_placeholder: Autumn club championship
       optional: Optional
+      quiz_url_hint: Paste the quiz's join link. Signed-in members get a button to it on their phones, and the quiz lets them in under their name.
       pairing_systems:
         swiss: Players with similar scores meet each other. Good for many players and few rounds.
         round_robin: Everybody plays everybody. All rounds are paired when the tournament starts.
@@ -321,6 +322,7 @@ en:
         result_in: The result is in. If it's wrong, tell the arbiter.
         countdown: Round starts in
         countdown_over: The round is starting!
+        quiz: Open the quiz
     games:
       update:
         saved: Result recorded. Thanks!
@@ -373,6 +375,7 @@ en:
         pairing_system: Pairing system
         rounds_count: Number of rounds
         status: Status
+        quiz_url: Quiz link
       participation:
         player: Player
         player_id: Player
@@ -422,6 +425,8 @@ en:
               locked: can't be changed after the tournament has started
             rounds_count:
               less_than_paired: "can't be less than the number of rounds already paired (%{count})"
+            quiz_url:
+              invalid: must be a link starting with http:// or https://
             base:
               already_started: Tournament has already started
               not_enough_members: At least 2 members are needed to start the tournament
