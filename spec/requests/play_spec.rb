@@ -100,6 +100,7 @@ RSpec.describe "Members on their phones" do
     get play_tournament_path(tournament)
     expect(page_html.css("a.quiz-link").map { |link| link["href"] }).to eq([ "https://quiz.example.org/join/Ab3dE6gH?login=Anna+Kowalska" ])
     expect(texts("a.quiz-link")).to eq([ I18n.t("play.tournaments.show.quiz") ])
+    expect(page_html.at_css("a.quiz-link")["target"]).to eq("_blank"), "the quiz opens in a new tab, keeping the tournament page"
   end
 
   it "never shows a member anyone's Telegram, their own included" do
